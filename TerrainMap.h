@@ -7,7 +7,7 @@
 
 // Simple class for a 2D (x,y) coordinate vector with integer values
 
-struct Point {
+struct Point { //calss where everything is public
     Point() {};
     Point(int i, int j) : x(i), y(j) {};
     int x;

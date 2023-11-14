@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     Point start = read_coordinates(argc,argv,2);
     Point finish = read_coordinates(argc,argv,4);
 
-    std::vector<Path*> paths = { //new YourPath(m,"MyPathName",start,finish), ...
+    std::vector<Path*> paths = { new YourPath(m,"MyPathName",start,finish), ...
         // Here add the list of dynamically created classes with path finding algorithms
     };
 
@@ -41,9 +41,9 @@ int main(int argc, char *argv[]) {
         std::cout << "Path search: " << p->getName() << std::endl;
         std::cout << "=============" << std::endl;
         p->find();
-        p->printStats();
+        p->printStats(); //information of path
         std::cout << "=============" << std::endl;
-        p->saveToFile();
+        p->saveToFile(); //save information of path
         delete p;
     }
 
