@@ -6,6 +6,7 @@
 #include <memory>
 #include "PlanePath.h"
 #include "BoatPath.h"
+#include "CarPath.h"
 
 // Include files of your path classes will need to be added here
 
@@ -24,41 +25,43 @@ Point read_coordinates(int argc, char *argv[], int i_option) {
 }
 
 int main(int argc, char *argv[]) {
-    const int nx = 256;
-    const int ny = 256;
+    try {
+        if (argc <= 4) {
+            std::cerr << "Insufficient arguments!" << std::endl;
+            return 1;
+        }
 
-    std::string terrain_filename;
+        const int nx = 256;
+        const int ny = 256;
 
-    // Load the terrain map
+        std::string terrain_filename = argv[1];
+        TerrainMap m(nx, ny, terrain_filename);
 
-    if (argc > 1) terrain_filename = argv[1];
-    else { std::cout << "No terrain file specified!" << std::endl; return 0; }
+        Point start = read_coordinates(argc, argv, 2);
+        Point finish = read_coordinates(argc, argv, 4);
 
-    TerrainMap m(nx,ny,terrain_filename);
+        // uniqu
+        std::vector<std::shared_ptr<Path>> paths = {
+                std::make_shared<PlanePath>(m, start, finish),
+                std::make_shared<BoatPath>(m, start, finish),
+                std::make_shared<CarPath>(m, start, finish)
 
-    // Load the coordinates of the start and end points
+        };
+//        paths.push_back(std::make_unique<BoatPath>(m, start, finish));
+//        paths.push_back(std::make_unique<PlanePath>(m, start, finish));
 
-    Point start = read_coordinates(argc,argv,2); //pustim terrain.dat 10 10 22 22, takze i_option 2 je prvni 10
-    Point finish = read_coordinates(argc,argv,4); //pustim terrain.dat 10 10 22 22, takze i_option 4 je prvni 22
+        for (auto& p : paths) {
+            std::cout << "Path search: " << p->getName() << std::endl;
+            std::cout << "=============" << std::endl;
+            p->find();
+            p->printStats();
+            std::cout << "=============" << std::endl;
+            p->saveToFile();
+        }
 
-/*    PlanePath planePath(m, start, finish);
-    if (planePath.find()) {
-        planePath.printStats();
-        planePath.saveToFile();
-    } else {
-        std::cout << "No path found." << std::endl;
-    }*/
-
-    std::vector<std::unique_ptr<Path>> paths;
-    paths.push_back(std::make_unique<PlanePath>(m,start,finish));
-
-    for (auto& p : paths) {
-        std::cout << "Path search: " << p->getName() << std::endl;
-        std::cout << "=============" << std::endl;
-        p->find();
-        p->printStats(); //information of path
-        std::cout << "=============" << std::endl;
-        p->saveToFile(); //save information of path
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
 
     return 0;

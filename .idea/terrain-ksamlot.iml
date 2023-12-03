@@ -5,8 +5,4 @@
       <configuration sdkName="Python 3.11 (terrain-ksamlot)" />
     </facet>
   </component>
-  <component name="NewModuleRootManager">
-    <orderEntry type="jdk" jdkName="Python 3.10 (venv)" jdkType="Python SDK" />
-    <orderEntry type="sourceFolder" forTests="false" />
-  </component>
 </module>

@@ -7,11 +7,9 @@
 #include <queue>
 #include <set>
 #include <map>
-#include <algorithm>
-
 
 PlanePath::PlanePath(TerrainMap &m, const Point &startIn, const Point &finishIn)
-        : Path(m, "Letadlo", startIn, finishIn) {}
+        : Path(m, "Plane", startIn, finishIn) {}
 
 bool PlanePath::find() {
     std::queue<Point> queue;
@@ -53,13 +51,17 @@ std::vector<Point> PlanePath::findNeighbor(const Point &current) {
 }
 
 bool PlanePath::isValid(const Point &referencePoint) {
+    return map.validCoords(referencePoint);
+}
+
+/*bool PlanePath::isValid(const Point &referencePoint) {
     if (referencePoint.x > map.nx || referencePoint.x < 0 || referencePoint.y > map.ny || referencePoint.y < 0) {
         return false;
     }
     return true;
-}
+}*/
 
-void PlanePath::reconstructPath(const std::map<Point, Point>& predecessor){
+void PlanePath::reconstructPath(const std::map<Point, Point> &predecessor){
     Point current = finish;
     while (current != start){
         path.push_back(current);

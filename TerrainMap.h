@@ -16,7 +16,7 @@ struct Point { //class where everything is public
     Point& operator= (double a) { x = a; y = a; return *this; };
     bool operator!= (Point const& v) const { return !(operator== (v)); };
     bool operator== (Point const& v) const { return x == v.x && y == v.y; };
-    Point operator+ (Point const& v) const { return Point(x+v.x,y+v.y); };
+    Point operator+ (Point const& v) const { return Point(x+v.x,y+v.y); }; //stejne jako udelat funkci Point scitani(Point const& a, Point const& b) {return Point(a.x+b.x, a.y+b.y);};
     Point operator- (Point const& v) const { return Point(x-v.x,y-v.y); };
     bool operator<  (Point const& v) const { return x + y*nx_max < v.x + v.y*nx_max; }; // This is to provide a simple ordering, the operator doesn't have a geometrical meaning
     double length() const { return std::sqrt(x*x + y*y); }

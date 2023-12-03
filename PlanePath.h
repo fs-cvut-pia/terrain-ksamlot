@@ -8,6 +8,7 @@
 #include <map>
 #include "Path.h"
 
+
 class PlanePath : public Path{
 public:
     PlanePath(TerrainMap &m, const Point &startIn, const Point &finishIn);
@@ -20,6 +21,8 @@ private:
     std::vector<Point> findNeighbor(const Point &current);
 
     void reconstructPath(const std::map<Point, Point> &predecessor);
+
+    //double dist_between(const Point& point1, const Point& point2);
 };
 
 #endif //TERRAIN_KSAMLOT_PLANEPATH_H
