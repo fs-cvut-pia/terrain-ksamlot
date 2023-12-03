@@ -21,9 +21,9 @@ ax.contour(terrain,[0])
 
 # Load and plot file path.dat
 
-# path = np.loadtxt("./Plane.dat")
+path = np.loadtxt("./Plane.dat")
 # path = np.loadtxt("./Boat.dat")
-path = np.loadtxt("./Car.dat")
+# path = np.loadtxt("./Car.dat")
 
 start = path[0]
 target = path[-1]
