@@ -8,6 +8,7 @@
 #include <queue>
 #include <set>
 #include <map>
+#include <cmath>
 
 BoatPath::BoatPath(TerrainMap &m, const Point &startIn, const Point &finishIn)
         : Path(m,"Boat",startIn,finishIn) {}
@@ -16,41 +17,45 @@ bool BoatPath::find() {
     std::queue<Point> queue;
     std::set<Point> visited;
     std::map<Point, Point> predecessor;
+    std::map<Point, double> cost; // Add a map to store the cost to reach each point
     ///
     queue.push(start);
     visited.insert(start);
+    cost[start] = 0;
 
     while (!queue.empty()) {
         Point current = queue.front();
         queue.pop();
-        for (const auto neighbor: findNeighbor(current)) {
-            if (visited.find(neighbor) == visited.end()){
-                queue.push(neighbor);
-                visited.insert(neighbor);
-                predecessor[neighbor] = current; //mapa(predicessor) na pozici klice[] = hodnota
-                if(neighbor == finish){
-                    reconstructPath(predecessor);
-                    return true;
-                }
+        if (current == finish) {
+            reconstructPath(predecessor);
+            return true;
+        }
+        for (const auto& neighbor : findNeighbor(current)) {
+            double newCost = cost[current] + neighbor.second; // The cost from the current node to the neighbor
+            if (!visited.count(neighbor.first) || newCost < cost[neighbor.first]) { // Check if new path to neighbor is shorter
+                cost[neighbor.first] = newCost;
+                queue.push(neighbor.first);
+                visited.insert(neighbor.first);
+                predecessor[neighbor.first] = current;
             }
         }
     }
     return false;
 }
 
-std::vector<Point> BoatPath::findNeighbor(const Point &current) {
-    std::vector<Point> neighbors;
-    for (int j = -1; j < 2; ++j) {
-        for (int i = -1; i < 2; ++i) {
-            auto neighbor = Point(current.x + i, current.y + j);
-            if (isValid(neighbor)) {
-                //std::cout<<"Pro bod: ["<<current.x << "," << current.y<<"] soused: [" << neighbor.x << "," << neighbor.y<<"]" << "výška: "<< map.alt(neighbor)<<std::endl;
-                neighbors.push_back(neighbor);
+std::vector<std::pair<Point, double>> BoatPath::findNeighbor(const Point &current) {
+        std::vector<std::pair<Point, double>> neighbors;
+        for (int j = -1; j < 2; ++j) {
+            for (int i = -1; i < 2; ++i) {
+                auto neighbor = Point(current.x + i, current.y + j);
+                double cost = (j == 0 || i == 0) ? 1.0 : std::sqrt(2.0); // If not diagonal, cost is 1, otherwise sqrt(2)
+                if (isValid(neighbor)) {
+                    neighbors.push_back(std::make_pair(neighbor, cost));
+                }
             }
         }
+        return neighbors;
     }
-    return neighbors;
-}
 
 bool BoatPath::isValid(const Point &referencePoint) {
     if (map.validCoords(referencePoint)){
@@ -59,20 +64,6 @@ bool BoatPath::isValid(const Point &referencePoint) {
     }
     return false;
 }
-//bool BoatPath::isValid(const Point &referencePoint) {
-//    if (referencePoint.x >= map.nx || referencePoint.x < 0 ||
-//        referencePoint.y >= map.ny || referencePoint.y < 0) {
-//        return false;
-//    }
-//    try {
-//        if(map.alt(referencePoint)>0)
-//            return false;
-//    }
-//    catch (const std::exception& e) {
-//        std::cout << "Exception caught: " << e.what() << std::endl;
-//    }
-//    return true;
-//}
 
 void BoatPath::reconstructPath(const std::map<Point, Point>& predecessor){
     Point current = finish;

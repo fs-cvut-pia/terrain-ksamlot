@@ -17,7 +17,7 @@ public:
 private:
     bool isValid(const Point& referencePoint);
 
-    std::vector<Point> findNeighbor(const Point &current);
+    std::vector<std::pair<Point, double>> findNeighbor(const Point &current); // Change return type here
 
     void reconstructPath(const std::map<Point, Point> &predecessor);
 
