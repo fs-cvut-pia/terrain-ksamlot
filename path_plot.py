@@ -9,7 +9,8 @@ width = 256
 height = 256
 
 # Initialize an empty 3D array to store terrain data
-terrain = np.loadtxt(sys.argv[1])
+terrain = np.loadtxt("./terrain.dat")
+
 
 # Create a visualization of the terrain
 x_coords, y_coords = np.meshgrid(np.arange(width), np.arange(height))
@@ -20,7 +21,9 @@ ax.contour(terrain,[0])
 
 # Load and plot file path.dat
 
-path = np.loadtxt(sys.argv[2])
+path = np.loadtxt("./Plane.dat")
+# path = np.loadtxt("./Boat.dat")
+# path = np.loadtxt("./Car.dat")
 
 start = path[0]
 target = path[-1]
